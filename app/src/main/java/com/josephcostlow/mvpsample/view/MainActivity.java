@@ -22,7 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MainActivityView {
 
     private EditText input;
-    private TextView textButton, result;
+    private TextView textButton, result, emptyRecycler;
     private RecyclerView recycler;
     private CustomAdapter adapter;
     private LayoutInflater layoutInflater;
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         input = findViewById(R.id.edit_input);
         result = findViewById(R.id.result);
         textButton = findViewById(R.id.textView_button);
+        emptyRecycler = findViewById(R.id.empty_recycler);
         recycler = findViewById(R.id.recycler);
 
         layoutInflater = getLayoutInflater();
@@ -64,13 +65,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     }
 
     @Override
-    public void displayError() {
+    public void displayInputError() {
         Toast.makeText(this, R.string.input_error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void setupAdapter(List<ListItem> dataList) {
-        this.dataList = dataList;
+    public void setupAdapter(List<ListItem> data) {
+        this.dataList = data;
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(layoutManager);
@@ -82,6 +83,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public void updateRecycler(ListItem listItem) {
         dataList.add(listItem);
         adapter.notifyItemInserted(dataList.size() - 1);
+    }
+
+    @Override
+    public void showRecycler() {
+        emptyRecycler.setVisibility(View.GONE);
+        recycler.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showEmptyRecycler() {
+        recycler.setVisibility(View.GONE);
+        emptyRecycler.setVisibility(View.VISIBLE);
+        emptyRecycler.setText(R.string.empty_recycler);
     }
 
 

@@ -19,8 +19,8 @@ public class RepositoryImpl implements Repository {
     @Override
     public List<ListItem> getListOfData() {
         ArrayList<ListItem> listOfData = new ArrayList<>();
-        listItem = addItemToList("example");
-        listOfData.add(listItem);
+//        listItem = addItemToList("example");
+//        listOfData.add(listItem);
         return listOfData;
     }
 

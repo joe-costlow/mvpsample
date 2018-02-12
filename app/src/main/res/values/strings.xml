@@ -3,4 +3,5 @@
     <string name="button_text">Add</string>
     <string name="input_error">Input is empty</string>
     <string name="detail_activity_label">DetailActivity</string>
+    <string name="empty_recycler">No Results</string>
 </resources>

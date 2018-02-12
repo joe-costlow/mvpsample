@@ -11,7 +11,9 @@ import java.util.List;
 public interface MainActivityView {
     String getInput();
     void displayResult(String input);
-    void displayError();
+    void displayInputError();
     void setupAdapter(List<ListItem> dataList);
     void updateRecycler(ListItem listItem);
+    void showRecycler();
+    void showEmptyRecycler();
 }
