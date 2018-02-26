@@ -3,10 +3,15 @@ Simple application utilizing MVP architecture
 
 MVPSample is my first attempt to utilize MVP architecture in an application. It will be a test application for new features, while using MVP architecture.
 
+#### 2018-Feb-26
+At this point, the application utilizes Retrofit 2 to make a call to the GitHub API. The response from the call is used to load the repositories of searched user.
+
+The button on the first screen has changed from ADD to SEARCH.
+
 #### 2018-Jan-31
 At this point, the application has two screens:
 
-The first screen has an area to input text, a button (ADD), an area that displays the inputted text, and a list of inputs added.
+The first screen has an area to name text, a button (ADD), an area that displays the inputted text, and a list of inputs added.
 
 The second screen displays the text of the item selected from the list of inputs from the previous screen.
 

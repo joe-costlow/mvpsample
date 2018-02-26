@@ -9,6 +9,11 @@ import java.util.List;
  */
 
 public interface Repository {
-    List<ListItem> getListOfData();
-    ListItem addItemToList(String input);
+
+    interface LoadListCallback {
+        void onLoaded(List<ListItem> list);
+        void onListNotAvailable();
+    }
+
+    void loadData(String base, String input, LoadListCallback callback);
 }

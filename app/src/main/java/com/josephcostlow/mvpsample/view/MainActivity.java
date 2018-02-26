@@ -12,14 +12,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.josephcostlow.mvpsample.Injection;
 import com.josephcostlow.mvpsample.R;
+import com.josephcostlow.mvpsample.contract.MainActivityContract;
 import com.josephcostlow.mvpsample.model.ListItem;
 import com.josephcostlow.mvpsample.presentation.MainActivityPresenterImpl;
-import com.josephcostlow.mvpsample.repository.RepositoryImpl;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainActivityView {
+public class MainActivity extends AppCompatActivity implements MainActivityContract.View {
 
     private EditText input;
     private TextView textButton, result, emptyRecycler;
@@ -27,13 +28,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     private CustomAdapter adapter;
     private LayoutInflater layoutInflater;
     private List<ListItem> dataList;
-    private MainActivityPresenterImpl presenter;
+    private MainActivityContract.Presenter presenter;
     private static final String INTENT_EXTRA = "clickedItem";
+    private static String BASE_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        BASE_URL = getResources().getString(R.string.github_base_url);
 
         input = findViewById(R.id.edit_input);
         result = findViewById(R.id.result);
@@ -43,17 +47,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         layoutInflater = getLayoutInflater();
 
-        presenter = new MainActivityPresenterImpl(this, new RepositoryImpl());
+        presenter = new MainActivityPresenterImpl(this, Injection.provideRepository());
 
         textButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onAddButtonClick();
+                presenter.onSearchButtonClick(BASE_URL, getInput());
             }
         });
     }
 
-    @Override
     public String getInput() {
         return input.getText().toString();
     }
@@ -80,12 +83,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     }
 
     @Override
-    public void updateRecycler(ListItem listItem) {
-        dataList.add(listItem);
-        adapter.notifyItemInserted(dataList.size() - 1);
-    }
-
-    @Override
     public void showRecycler() {
         emptyRecycler.setVisibility(View.GONE);
         recycler.setVisibility(View.VISIBLE);
@@ -96,6 +93,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         recycler.setVisibility(View.GONE);
         emptyRecycler.setVisibility(View.VISIBLE);
         emptyRecycler.setText(R.string.empty_recycler);
+    }
+
+    @Override
+    public void setPresenter(MainActivityContract.Presenter impl) {
+        presenter = impl;
     }
 
 
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         public void onBindViewHolder(CustomViewHolder holder, int position) {
             ListItem currentItem = dataList.get(position);
 
-            holder.dataItemText.setText(currentItem.getInput());
+            holder.dataItemText.setText(currentItem.getName());
         }
 
         @Override
@@ -139,12 +141,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         @Override
         public void onClick(View view) {
             ListItem currentItem = dataList.get(this.getAdapterPosition());
-//            int position = this.getAdapterPosition();
-//            String positionText = Integer.toString(position);
-//            Toast.makeText(getApplicationContext(), positionText, Toast.LENGTH_SHORT).show();
-
             Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-            intent.putExtra(INTENT_EXTRA, currentItem.getInput());
+            intent.putExtra(INTENT_EXTRA, currentItem.getName());
 
             startActivity(intent);
         }

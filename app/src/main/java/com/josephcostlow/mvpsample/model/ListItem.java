@@ -6,17 +6,17 @@ package com.josephcostlow.mvpsample.model;
 
 public class ListItem {
 
-    String input;
+    String name;
 
-    public ListItem(String input) {
-        this.input = input;
+    public ListItem(String name) {
+        this.name = name;
     }
 
-    public String getInput() {
-        return input;
+    public String getName() {
+        return name;
     }
 
-    public void setInput(String input) {
-        this.input = input;
+    public void setName(String name) {
+        this.name = name;
     }
 }

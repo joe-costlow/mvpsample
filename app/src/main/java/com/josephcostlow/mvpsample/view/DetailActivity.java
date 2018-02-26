@@ -5,12 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.josephcostlow.mvpsample.R;
+import com.josephcostlow.mvpsample.contract.DetailActivityContract;
 import com.josephcostlow.mvpsample.presentation.DetailActivityPresenterImpl;
 
-public class DetailActivity extends AppCompatActivity implements DetailActivityView {
+public class DetailActivity extends AppCompatActivity implements DetailActivityContract.View {
 
     TextView itemDetailText;
-    DetailActivityPresenterImpl presenter;
+    DetailActivityContract.Presenter presenter;
     private static final String INTENT_EXTRA = "clickedItem";
 
     @Override
@@ -24,7 +25,6 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityV
 
         presenter = new DetailActivityPresenterImpl(this);
 
-//        presenter.getIntent();
         presenter.utilizeIntent(presenter.getIntent());
     }
 
@@ -36,5 +36,10 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityV
     @Override
     public void setDetailText(String intentExtra) {
         itemDetailText.setText(intentExtra);
+    }
+
+    @Override
+    public void setPresenter(DetailActivityContract.Presenter impl) {
+        presenter = impl;
     }
 }

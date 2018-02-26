@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">mvpsample</string>
-    <string name="button_text">Add</string>
+    <string name="button_text">SEARCH</string>
     <string name="input_error">Input is empty</string>
     <string name="detail_activity_label">DetailActivity</string>
     <string name="empty_recycler">No Results</string>
+    <string name="github_base_url">https://api.github.com/</string>
 </resources>

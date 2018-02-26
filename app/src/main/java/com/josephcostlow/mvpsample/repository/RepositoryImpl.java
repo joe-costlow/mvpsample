@@ -2,7 +2,6 @@ package com.josephcostlow.mvpsample.repository;
 
 import com.josephcostlow.mvpsample.model.ListItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,22 +10,33 @@ import java.util.List;
 
 public class RepositoryImpl implements Repository {
 
-    ListItem listItem;
+    private static RepositoryImpl INSTANCE = null;
+    private final Repository remoteDataSource;
 
-    public RepositoryImpl() {
+    private RepositoryImpl(Repository remoteSource) {
+        remoteDataSource = remoteSource;
+    }
+
+    public static RepositoryImpl getInstance(Repository remoteSource) {
+        if (INSTANCE == null) {
+            INSTANCE = new RepositoryImpl(remoteSource);
+        }
+
+        return INSTANCE;
     }
 
     @Override
-    public List<ListItem> getListOfData() {
-        ArrayList<ListItem> listOfData = new ArrayList<>();
-//        listItem = addItemToList("example");
-//        listOfData.add(listItem);
-        return listOfData;
-    }
+    public void loadData(String base, String input, final LoadListCallback callback) {
+        remoteDataSource.loadData(base, input, new LoadListCallback() {
+            @Override
+            public void onLoaded(List<ListItem> list) {
+                callback.onLoaded(list);
+            }
 
-    @Override
-    public ListItem addItemToList(String input) {
-        listItem = new ListItem(input);
-        return listItem;
+            @Override
+            public void onListNotAvailable() {
+
+            }
+        });
     }
 }

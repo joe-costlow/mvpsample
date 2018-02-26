@@ -1,8 +1,9 @@
 package com.josephcostlow.mvpsample.presentation;
 
+import com.josephcostlow.mvpsample.contract.MainActivityContract;
 import com.josephcostlow.mvpsample.model.ListItem;
+import com.josephcostlow.mvpsample.repository.Repository;
 import com.josephcostlow.mvpsample.repository.RepositoryImpl;
-import com.josephcostlow.mvpsample.view.MainActivityView;
 
 import java.util.List;
 
@@ -10,22 +11,43 @@ import java.util.List;
  * Created by Joseph Costlow on 22-Jan-18.
  */
 
-public class MainActivityPresenterImpl implements MainActivityPresenter {
+public class MainActivityPresenterImpl implements MainActivityContract.Presenter {
 
-    MainActivityView view;
-    RepositoryImpl dataSource;
+    private final MainActivityContract.View view;
+    private final RepositoryImpl dataSource;
 
+    public MainActivityPresenterImpl(MainActivityContract.View currentView, RepositoryImpl repository) {
+        view = currentView;
+        dataSource = repository;
 
-    public MainActivityPresenterImpl(MainActivityView view, RepositoryImpl dataSource) {
-        this.view = view;
-        this.dataSource = dataSource;
-
-        getInitialData();
+        view.setPresenter(this);
     }
 
-    private void getInitialData() {
+    @Override
+    public void onSearchButtonClick(String baseUrl, String userTextInput) {
 
-        List<ListItem> list =  dataSource.getListOfData();
+        boolean isValid = validateInput(userTextInput);
+
+        if (isValid) {
+            view.displayResult(userTextInput);
+            view.showRecycler();
+            dataSource.loadData(baseUrl, userTextInput, new Repository.LoadListCallback() {
+                @Override
+                public void onLoaded(List<ListItem> list) {
+                    loadReturnedData(list);
+                }
+
+                @Override
+                public void onListNotAvailable() {
+
+                }
+            });
+        } else {
+            view.displayInputError();
+        }
+    }
+
+    public void loadReturnedData(List<ListItem> list) {
         view.setupAdapter(list);
 
         if (list.size() != 0) {
@@ -33,25 +55,14 @@ public class MainActivityPresenterImpl implements MainActivityPresenter {
         } else {
             view.showEmptyRecycler();
         }
-
-    }
-
-    @Override
-    public void onAddButtonClick() {
-        String result = view.getInput();
-        boolean isValid = validateInput(result);
-
-        if (isValid) {
-            view.displayResult(result);
-            ListItem listItem = dataSource.addItemToList(result);
-            view.showRecycler();
-            view.updateRecycler(listItem);
-        } else {
-            view.displayInputError();
-        }
     }
 
     private boolean validateInput(String result) {
         return result.length() > 0;
+    }
+
+    @Override
+    public void start() {
+
     }
 }
