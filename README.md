@@ -3,6 +3,9 @@ Simple application utilizing MVP architecture
 
 MVPSample is my first attempt to utilize MVP architecture in an application. It will be a test application for new features, while using MVP architecture.
 
+#### 2018-Mar-04
+In-memory data storage added to allow for data persistence of the list and searched GitHub user across orientation changes and back navigation from the second screen.
+
 #### 2018-Feb-26
 At this point, the application utilizes Retrofit 2 to make a call to the GitHub API. The response from the call is used to load the repositories of searched user.
 
