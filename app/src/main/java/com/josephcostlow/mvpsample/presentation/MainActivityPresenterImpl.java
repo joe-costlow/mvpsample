@@ -30,16 +30,16 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
 
         if (isValid) {
             view.displayResult(userTextInput);
-            view.showRecycler();
             dataSource.loadData(baseUrl, userTextInput, new Repository.LoadListCallback() {
                 @Override
-                public void onLoaded(List<ListItem> list) {
+                public void onLoaded(List<ListItem> list, String input) {
+                    view.displayResult(input);
                     loadReturnedData(list);
                 }
 
                 @Override
                 public void onListNotAvailable() {
-
+                    view.showEmptyRecycler();
                 }
             });
         } else {
@@ -47,11 +47,10 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
         }
     }
 
-    public void loadReturnedData(List<ListItem> list) {
-        view.setupAdapter(list);
-
+    private void loadReturnedData(List<ListItem> list) {
         if (list.size() != 0) {
             view.showRecycler();
+            view.setupAdapter(list);
         } else {
             view.showEmptyRecycler();
         }
@@ -63,6 +62,9 @@ public class MainActivityPresenterImpl implements MainActivityContract.Presenter
 
     @Override
     public void start() {
-
+        if (dataSource.restoreAuthor() != null && dataSource.restoreRepositories() != null) {
+            view.displayResult(dataSource.restoreAuthor());
+            loadReturnedData(dataSource.restoreRepositories());
+        }
     }
 }

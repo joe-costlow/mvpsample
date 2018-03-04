@@ -30,7 +30,7 @@ public class RemoteDataSource implements Repository {
     }
 
     @Override
-    public void loadData(String base, String input, final LoadListCallback callback) {
+    public void loadData(String base, final String input, final LoadListCallback callback) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(base)
                 .addConverterFactory(GsonConverterFactory.create());
@@ -42,13 +42,28 @@ public class RemoteDataSource implements Repository {
         call.enqueue(new Callback<List<ListItem>>() {
             @Override
             public void onResponse(Call<List<ListItem>> call, Response<List<ListItem>> response) {
-                callback.onLoaded(response.body());
+                callback.onLoaded(response.body(), input);
             }
 
             @Override
             public void onFailure(Call<List<ListItem>> call, Throwable t) {
-
+                callback.onListNotAvailable();
             }
         });
+    }
+
+    @Override
+    public void storeData(String input, List<ListItem> loadedData) {
+
+    }
+
+    @Override
+    public String restoreAuthor() {
+        return null;
+    }
+
+    @Override
+    public List<ListItem> restoreRepositories() {
+        return null;
     }
 }

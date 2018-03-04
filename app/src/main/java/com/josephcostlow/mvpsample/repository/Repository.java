@@ -11,9 +11,12 @@ import java.util.List;
 public interface Repository {
 
     interface LoadListCallback {
-        void onLoaded(List<ListItem> list);
+        void onLoaded(List<ListItem> list, String input);
         void onListNotAvailable();
     }
 
     void loadData(String base, String input, LoadListCallback callback);
+    void storeData(String input, List<ListItem> loadedData);
+    String restoreAuthor();
+    List<ListItem> restoreRepositories();
 }

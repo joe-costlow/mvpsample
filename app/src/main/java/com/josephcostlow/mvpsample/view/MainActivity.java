@@ -1,5 +1,6 @@
 package com.josephcostlow.mvpsample.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,12 +51,24 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
         presenter = new MainActivityPresenterImpl(this, Injection.provideRepository());
 
+        if (savedInstanceState != null) {
+            presenter.start();
+        }
+
         textButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0);
                 presenter.onSearchButtonClick(BASE_URL, getInput());
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.start();
     }
 
     public String getInput() {

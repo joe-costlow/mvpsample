@@ -1,5 +1,6 @@
 package com.josephcostlow.mvpsample;
 
+import com.josephcostlow.mvpsample.repository.InMemoryDataSource;
 import com.josephcostlow.mvpsample.repository.RemoteDataSource;
 import com.josephcostlow.mvpsample.repository.RepositoryImpl;
 
@@ -10,6 +11,6 @@ import com.josephcostlow.mvpsample.repository.RepositoryImpl;
 public class Injection {
 
     public static RepositoryImpl provideRepository() {
-        return RepositoryImpl.getInstance(RemoteDataSource.getInstance());
+        return RepositoryImpl.getInstance(RemoteDataSource.getInstance(), InMemoryDataSource.getInstance());
     }
 }
