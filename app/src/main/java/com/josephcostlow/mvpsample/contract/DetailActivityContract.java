@@ -10,12 +10,13 @@ import com.josephcostlow.mvpsample.BaseView;
 public interface DetailActivityContract {
 
     interface View extends BaseView<Presenter> {
-        String getClickedItemIntent();
+        void getClickedItemIntent();
         void setDetailText(String intentExtra);
+        void setTitle(String author);
     }
 
     interface Presenter extends BasePresenter {
-        String getIntent();
-        void utilizeIntent(String intentExtra);
+        void getIntent();
+        void utilizeIntent(String author, int position);
     }
 }

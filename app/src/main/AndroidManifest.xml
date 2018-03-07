@@ -19,7 +19,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.DetailActivity"
-            android:label="@string/detail_activity_label"
             android:parentActivityName=".view.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

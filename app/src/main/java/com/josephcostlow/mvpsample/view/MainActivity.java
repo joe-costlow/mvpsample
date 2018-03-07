@@ -3,6 +3,7 @@ package com.josephcostlow.mvpsample.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,8 +32,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private LayoutInflater layoutInflater;
     private List<ListItem> dataList;
     private MainActivityContract.Presenter presenter;
-    private static final String INTENT_EXTRA = "clickedItem";
-    private static String BASE_URL;
+    private static final String INTENT_EXTRA_AUTHOR = "searchedAuthor";
+    private static final String INTENT_EXTRA_POSITION = "clickedPosition";
+    private static final String RV_STATE_KEY = "recyclerState";
+    private static Bundle rvStateBundle;
+    private static String BASE_URL, author;
+    Parcelable rvState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +76,51 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         presenter.start();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (recycler.getLayoutManager() != null) {
+            if (rvStateBundle != null) {
+                rvState = rvStateBundle.getParcelable(RV_STATE_KEY);
+                recycler.getLayoutManager().onRestoreInstanceState(rvState);
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (recycler.getLayoutManager() != null) {
+            rvStateBundle = new Bundle();
+            rvState = recycler.getLayoutManager().onSaveInstanceState();
+            rvStateBundle.putParcelable(RV_STATE_KEY, rvState);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (recycler.getLayoutManager() != null) {
+            rvState = recycler.getLayoutManager().onSaveInstanceState();
+            outState.putParcelable(RV_STATE_KEY, rvState);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (recycler.getLayoutManager() != null) {
+            rvState = savedInstanceState.getParcelable(RV_STATE_KEY);
+        }
+    }
+
     public String getInput() {
         return input.getText().toString();
     }
 
     @Override
     public void displayResult(String editTextInput) {
+        author = editTextInput;
         result.setText(editTextInput);
         input.setText("");
     }
@@ -154,9 +198,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
         @Override
         public void onClick(View view) {
-            ListItem currentItem = dataList.get(this.getAdapterPosition());
             Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-            intent.putExtra(INTENT_EXTRA, currentItem.getName());
+            intent.putExtra(INTENT_EXTRA_AUTHOR, author);
+            intent.putExtra(INTENT_EXTRA_POSITION, this.getAdapterPosition());
 
             startActivity(intent);
         }
